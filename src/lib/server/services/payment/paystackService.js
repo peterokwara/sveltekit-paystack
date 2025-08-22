@@ -1,7 +1,4 @@
 import { env } from "$env/dynamic/private";
-import { db } from "$lib/server/db";
-import { payments } from "$lib/server/db/schema";
-import { eq } from "drizzle-orm";
 
 // Runtime check to ensure the environment variable is loaded.
 // Using $env/dynamic/private reads the value at runtime.
@@ -10,10 +7,6 @@ if (!env.SECRET_PAYSTACK_TEST_KEY) {
 }
 
 const PAYSTACK_SECRET = env.SECRET_PAYSTACK_TEST_KEY;
-
-/**
- * @typedef {import('$lib/server/db/schema').payments['$inferSelect']} PaymentRecord
- */
 
 /**
  * Initializes a transaction with Paystack.
@@ -87,67 +80,4 @@ export function mapPaystackStatus(paystackStatus) {
     default:
       return "pending";
   }
-}
-
-/**
- * Updates the local payment record with details from Paystack using Drizzle ORM.
- * @param {number} paymentId - The ID of the payment record in our database.
- * @param {any} paystackData - The transaction data object from Paystack.
- * @param {object} [existingMetadata={}] - The existing metadata from the local payment record.
- * @returns {Promise<PaymentRecord | undefined>} The updated payment record from our database.
- */
-export async function syncPaymentWithPaystackDetails(
-  paymentId,
-  paystackData,
-  existingMetadata = {},
-) {
-  const internalStatus = mapPaystackStatus(paystackData.status);
-
-  const mergedMetadata = {
-    ...existingMetadata,
-    paystack_status: paystackData.status,
-    paystack_channel: paystackData.channel,
-  };
-
-  const [updatedRecord] = await db
-    .update(payments)
-    .set({
-      status: internalStatus,
-      providerPaymentId: String(paystackData.id),
-      providerResponse: paystackData,
-      metadata: mergedMetadata,
-      updatedAt: new Date(),
-    })
-    .where(eq(payments.id, paymentId))
-    .returning();
-
-  if (
-    updatedRecord &&
-    updatedRecord.status === "completed" &&
-    !updatedRecord.successActionsExecuted
-  ) {
-    await handleSuccessfulPayment(updatedRecord);
-    updatedRecord.successActionsExecuted = true;
-  }
-
-  return updatedRecord;
-}
-
-/**
- * Handles post-payment success logic, designed to be idempotent.
- * @param {PaymentRecord} paymentRecord - The payment record from our database.
- */
-export async function handleSuccessfulPayment(paymentRecord) {
-  await db
-    .update(payments)
-    .set({
-      successActionsExecuted: true,
-      updatedAt: new Date(),
-    })
-    .where(eq(payments.id, paymentRecord.id));
-
-  console.log(
-    `Executing successful payment actions for payment ID: ${paymentRecord.id}...`,
-  );
-  console.log(`Activating subscription for user ${paymentRecord.userId}...`);
 }

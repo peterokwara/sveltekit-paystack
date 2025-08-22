@@ -1,88 +1,46 @@
-import { json } from "@sveltejs/kit";
-import { db } from "$lib/server/db";
-import { payments } from "$lib/server/db/schema";
-import { eq } from "drizzle-orm";
+import { json } from '@sveltejs/kit';
+import { store } from '$lib/server/store';
 import {
-  getPaystackTransactionDetails,
-  syncPaymentWithPaystackDetails,
-} from "$lib/server/services/payment/paystackService";
+	getPaystackTransactionDetails,
+	mapPaystackStatus
+} from '$lib/server/services/payment/paystackService';
 
 /**
- * Handles GET requests to check the status of a payment transaction.
+ * API endpoint to check the status of a payment transaction.
  * @type {import('./$types').RequestHandler}
  */
 export const GET = async ({ params }) => {
-  const { referenceId } = params;
-  if (!referenceId) {
-    return json(
-      { message: "Payment reference ID is required." },
-      { status: 400 },
-    );
-  }
+	const { referenceId } = params;
 
-  // 1. Find the local payment record by its provider reference using Drizzle
-  let localPayment;
-  try {
-    localPayment = await db.query.payments.findFirst({
-      where: eq(payments.providerReference, referenceId),
-    });
-  } catch (err) {
-    console.error("Error fetching local payment record:", err);
-    return json(
-      { message: "An internal error occurred while fetching payment data." },
-      { status: 500 },
-    );
-  }
+	if (!referenceId) {
+		return json({ error: 'Reference ID is required' }, { status: 400 });
+	}
 
-  if (!localPayment) {
-    return json(
-      { message: "Payment record not found in our system." },
-      { status: 404 },
-    );
-  }
+	// 1. Check our internal store first
+	const payment = store.getPayment(referenceId);
+	if (payment?.status === 'completed') {
+		return json({
+			status: 'completed',
+			message: 'Payment already verified.'
+		});
+	}
 
-  // 2. If the payment status in our database is already final, return it immediately.
-  if (localPayment.status === "completed" || localPayment.status === "failed") {
-    return json({ data: { internal_status: localPayment.status } });
-  }
+	// 2. If not completed, verify with Paystack
+	const transactionDetails = await getPaystackTransactionDetails(referenceId);
 
-  // 3. If our record is still pending, query Paystack's API for the latest status.
-  const paystackTransactionData =
-    await getPaystackTransactionDetails(referenceId);
+	if (!transactionDetails) {
+		return json({ status: 'failed', message: 'Could not verify transaction.' }, { status: 404 });
+	}
 
-  if (!paystackTransactionData) {
-    // If Paystack doesn't find the transaction, we can't confirm it.
-    // We'll keep our status as 'pending' and let the client poll again.
-    return json({
-      data: { internal_status: "pending", provider_status: "not_found" },
-    });
-  }
+	// 3. Map Paystack status to our internal status
+	const internalStatus = mapPaystackStatus(transactionDetails.status);
 
-  // 4. Sync our database with the definitive status from Paystack.
-  const updatedPaymentRecord = await syncPaymentWithPaystackDetails(
-    localPayment.id,
-    paystackTransactionData,
-    // Ensure metadata is passed as an object, even if it's null in the DB
-    localPayment.metadata || {},
-  );
+	// 4. Update our in-memory store
+	store.updatePaymentStatus(referenceId, internalStatus);
 
-  if (!updatedPaymentRecord) {
-    // This indicates a problem with the sync process
-    console.error(
-      `Failed to sync payment record for reference: ${referenceId}`,
-    );
-    return json(
-      { message: "Failed to update payment status." },
-      { status: 500 },
-    );
-  }
-
-  // 5. Return the newly updated status to the frontend.
-  return json({
-    data: {
-      internal_status: updatedPaymentRecord.status,
-      provider_status: paystackTransactionData.status,
-      verified: paystackTransactionData.status === "success",
-    },
-  });
+	// 5. Return the current status
+	return json({
+		status: internalStatus,
+		message: `Transaction status: ${internalStatus}`
+	});
 };
