@@ -120,10 +120,16 @@
 		<div
 			class="main-nav-menu fixed inset-0 z-50 transform overflow-auto bg-transparent transition duration-150 lg:hidden"
 			onclick={handleMobileMenuClose}
+			onkeydown={(e) => e.key === 'Enter' && handleMobileMenuClose()}
+			role="button"
+			tabindex="0"
 		>
 			<div
 				class="main-nav-menu-mobile z-50 w-[270px] border-r border-dashed border-slate-400/30 bg-white/70 shadow-sm backdrop-blur-lg md:w-[300px] lg:flex lg:w-[300px] lg:flex-col absolute left-0 top-0 bottom-0 right-0 lg:shadow-none"
 				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.stopPropagation()}
+				role="button"
+				tabindex="0"
 			>
 				<button>
 					<div class="header-logo flex items-center space-x-2 p-5">
