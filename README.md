@@ -1,6 +1,6 @@
 # SvelteKit Paystack SaaS Boilerplate
 
-Hujambo fellow developer! So, you're thinking of leaving that 9-5, or maybe you've got a brilliant idea for a side hustle. You want to build a Software as a Service (SaaS) business, but the starting line seems so far away. This boilerplate is for you.
+Hello, fellow developer! So, you're thinking of leaving that 9-5, or maybe you've got a brilliant idea for a side hustle. You want to build a Software as a Service (SaaS) business, but the starting line seems so far away. This boilerplate is for you.
 
 This isn't just a collection of files; it's a launchpad. It's designed to handle one of the most complex parts of any SaaS: getting paid. We've built a complete, realistic user authentication and payment flow using the power of **SvelteKit 5** and the reliability of **Paystack**, with a focus on the Kenyan market (using KES).
 
@@ -151,6 +151,6 @@ This is the fun part!
 
 Building a SaaS is a marathon, not a sprint. This boilerplate is designed to get you through the first few kilometers, handling the tricky parts so you can focus on your vision.
 
-Hii ni mwanzo tu! (This is just the beginning!)
+This is just the beginning.
 
 Good luck on your journey. Now, go build something amazing.
