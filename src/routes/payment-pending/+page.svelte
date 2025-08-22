@@ -36,6 +36,16 @@
 
 			if (result.status) {
 				currentStatus = result.status;
+				if (result.status === 'completed' && result.email) {
+					// Create session for the user
+					await fetch('/api/auth/session', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ email: result.email })
+					});
+				}
 			}
 		} catch (err) {
 			console.error('Polling error:', err);

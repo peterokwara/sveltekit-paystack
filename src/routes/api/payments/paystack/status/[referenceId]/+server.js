@@ -21,7 +21,8 @@ export const GET = async ({ params }) => {
 	if (payment?.status === 'completed') {
 		return json({
 			status: 'completed',
-			message: 'Payment already verified.'
+			message: 'Payment already verified.',
+			email: payment.email
 		});
 	}
 
@@ -40,9 +41,10 @@ export const GET = async ({ params }) => {
 		store.updatePaymentStatus(referenceId, internalStatus);
 	}
 
-	// 5. Return the current, verified status.
+	// 5. Return the current, verified status and user email
 	return json({
 		status: internalStatus,
-		message: `Transaction status: ${internalStatus}`
+		message: `Transaction status: ${internalStatus}`,
+		email: payment?.email
 	});
 };

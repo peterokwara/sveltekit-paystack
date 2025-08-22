@@ -55,7 +55,7 @@ export const actions = {
 				amount: amountInKobo,
 				currency: 'KES',
 				reference: transactionReference,
-				callback_url: callbackUrl,
+				callbackUrl: callbackUrl,
 				metadata: {
 					plan_name: plan,
 					redirect: redirectUrl
