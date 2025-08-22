@@ -68,20 +68,55 @@ Ready to build your dream? Here’s how to get this boilerplate up and running i
     cd sveltekit-paystack-saas
     ```
 
-2.  **Set Up Environment Variables**
+2.  **Install Dependencies**
+    ```bash
+    pnpm install
+    ```
+
+3.  **Paystack Configuration**
+
+    To process payments, you need to get your API keys from Paystack and set up a webhook to receive events.
+
+    **A. Get Your API Secret Key:**
+
+    -   Log in to your [Paystack Dashboard](https://dashboard.paystack.com/).
+    -   In the bottom-left corner, click on **Settings**.
+    -   Go to the **API Keys & Webhooks** tab.
+    -   You will see your **Test Secret Key**. This is what you need for development.
     -   Copy the example `.env` file:
         ```bash
         cp .env.example .env
         ```
-    -   Open the new `.env` file and add your Paystack **Secret Test Key**. You can find this on your Paystack dashboard.
+    -   Open the new `.env` file and paste your key:
         ```
-        SECRET_PAYSTACK_TEST_KEY=sk_test_...
+        SECRET_PAYSTACK_TEST_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         ```
 
-3.  **Install Dependencies**
-    ```bash
-    pnpm install
-    ```
+    **B. Set Up Your Webhook for Local Development:**
+
+    Paystack needs to send events to your running application (like `charge.success`). When you're developing on `localhost`, your app isn't accessible on the public internet. We can use a tool called **ngrok** to fix this.
+
+    -   **Install ngrok:** Follow the instructions on the [ngrok website](https://ngrok.com/download) to download and install it.
+
+    -   **Run Your SvelteKit App:** Start your app on the default port (5173):
+        ```bash
+        pnpm run dev
+        ```
+
+    -   **Expose Your Port with ngrok:** In a **new terminal window**, run the following command:
+        ```bash
+        ngrok http 5173
+        ```
+
+    -   **Get Your Webhook URL:** ngrok will give you a public "Forwarding" URL (it will look something like `https://random-string.ngrok-free.app`). Your webhook URL is this public URL plus the webhook path from this project:
+        `https://random-string.ngrok-free.app/api/webhooks/paystack`
+
+    -   **Add the URL to Paystack:**
+        -   Go back to the **API Keys & Webhooks** page on your Paystack Dashboard.
+        -   In the "Webhook URL" field (for Test mode), paste the full ngrok URL you just constructed.
+        -   Click "Save Changes".
+
+    Now, when a payment is made in your local test environment, Paystack will send the success event to the ngrok URL, which will forward it to your running SvelteKit application.
 
 4.  **Run the Development Server**
     ```bash
