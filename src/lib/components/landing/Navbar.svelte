@@ -119,11 +119,11 @@
 	{#if isMobileMenuOpen}
 		<div
 			class="main-nav-menu fixed inset-0 z-50 transform overflow-auto bg-transparent transition duration-150 lg:hidden"
-			on:click={handleMobileMenuClose}
+			onclick={handleMobileMenuClose}
 		>
 			<div
 				class="main-nav-menu-mobile z-50 w-[270px] border-r border-dashed border-slate-400/30 bg-white/70 shadow-sm backdrop-blur-lg md:w-[300px] lg:flex lg:w-[300px] lg:flex-col absolute left-0 top-0 bottom-0 right-0 lg:shadow-none"
-				on:click|stopPropagation
+				onclick={(e) => e.stopPropagation()}
 			>
 				<button>
 					<div class="header-logo flex items-center space-x-2 p-5">
@@ -136,7 +136,7 @@
 							<li
 								class="w-fit border-b border-transparent transition-colors duration-100 ease-linear hover:border-zinc-900/90 hover:text-zinc-900/90"
 							>
-								<a href={menuItem.url} on:click={handleMobileMenuClose}>
+								<a href={menuItem.url} onclick={handleMobileMenuClose}>
 									<button>{menuItem.text}</button>
 								</a>
 							</li>
@@ -147,7 +147,7 @@
 							<a
 								href="#pricing"
 								class="flex w-full items-center justify-center rounded-full border border-black px-6 py-2.5 font-semibold text-black transition hover:shadow-lg hover:drop-shadow"
-								on:click={handleMobileMenuClose}
+								onclick={handleMobileMenuClose}
 							>
 								<span>Join now</span>
 							</a>
