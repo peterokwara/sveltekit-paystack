@@ -26,8 +26,14 @@
 	<div
 		class="bg-[#E9EEF6] flex items-center justify-center gap-5 p-10 max-w-6xl mx-auto rounded-none lg:rounded-2xl overflow-hidden"
 	>
-		<img src={heroImage1} alt="" />
-		<img src={heroImage2} alt="" />
-		<img src={heroImage3} alt="" />
+		<a href="#pricing">
+			<img src={heroImage1} alt="" />
+		</a>
+		<a href="#pricing">
+			<img src={heroImage2} alt="" />
+		</a>
+		<a href="#pricing">
+			<img src={heroImage3} alt="" />
+		</a>
 	</div>
 </section>

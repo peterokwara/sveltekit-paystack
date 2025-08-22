@@ -21,7 +21,7 @@
 				</p>
 				<div class="w-full">
 					<a
-						href="/"
+						href="#pricing"
 						class="flex w-full lg:w-fit items-center text-white justify-center rounded-lg bg-[#2355A0] px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
 					>
 						<span>Learn more</span>
@@ -54,13 +54,13 @@
 				</p>
 				<div class="flex gap-x-5">
 					<a
-						href="/"
+						href="#pricing"
 						class="flex w-full lg:w-fit items-center text-white justify-center rounded-lg bg-[#2355A0] px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
 					>
 						<span>Get started</span>
 					</a>
 					<a
-						href="/"
+						href="#pricing"
 						class="flex w-full lg:w-fit items-center text-black justify-center rounded-lg border border-[#6A65FF] px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
 					>
 						<span>Learn more</span>
