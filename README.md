@@ -1,5 +1,7 @@
 # SvelteKit Paystack SaaS Boilerplate
 
+**[Live Demo](https://sveltekit-paystack.vercel.app/)**
+
 Hello, fellow developer! So, you're thinking of leaving that 9-5, or maybe you've got a brilliant idea for a side hustle. You want to build a Software as a Service (SaaS) business, but the starting line seems so far away. This boilerplate is for you.
 
 This isn't just a collection of files; it's a launchpad. It's designed to handle one of the most complex parts of any SaaS: getting paid. We've built a complete, realistic user authentication and payment flow using the power of **SvelteKit 5** and the reliability of **Paystack**, with a focus on the Kenyan market (using KES).
@@ -10,7 +12,7 @@ This template will get you somewhere solid along your journey, letting you focus
 
 This boilerplate comes pre-configured with a modern, powerful stack and essential SaaS features:
 
--   **SvelteKit 5 (Runes Mode):** Built with the latest, most intuitive version of Svelte for a fantastic developer experience.
+-   **SvelteKit 5 (Runes Mode):** Built with the latest, most intuitive version of Svelte for a fantastic developer experience. (Coming from React? [See a comparison](https://component-party.dev/compare/react-vs-svelte5)).
 -   **Paystack Integration:** Securely process payments in **KES** right out of the box.
 -   **Integrated Auth & Payment Flow:** A complete, end-to-end user journey that handles new sign-ups, existing users, and protected content.
 -   **Mock Authentication:** A simple, cookie-based mock session system that simulates user login, allowing you to build and test your app before implementing a full auth solution.
