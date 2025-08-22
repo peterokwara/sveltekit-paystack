@@ -2,14 +2,14 @@
 // src/lib/server/store.js
 
 /**
- * @type {Map<string, {status: string, email: string, amount: number, currency: string}>}
+ * @type {Map<string, {status: string, email: string, amount: number, currency: string, metadata: {redirect: string}}>}
  */
 const paymentStore = new Map();
 
 export const store = {
 	/**
 	 * @param {string} reference
-	 * @param {{email: string, amount: number, currency: string}} data
+	 * @param {{email: string, amount: number, currency: string, metadata: {redirect: string}}} data
 	 */
 	createPayment: (reference, data) => {
 		paymentStore.set(reference, { ...data, status: 'pending' });

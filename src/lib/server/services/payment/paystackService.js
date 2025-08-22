@@ -20,6 +20,7 @@ const PAYSTACK_SECRET = env.SECRET_PAYSTACK_TEST_KEY;
  * @returns {Promise<any>} The data returned by Paystack, including the authorization_url.
  */
 export async function initializePaystackTransaction(args) {
+  console.log(args);
   const response = await fetch(
     "https://api.paystack.co/transaction/initialize",
     {

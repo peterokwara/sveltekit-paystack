@@ -8,12 +8,24 @@
 	import PricingSection from '$lib/components/landing/Pricing/PricingSection.svelte';
 </script>
 
-<div>
+<div id="home">
 	<HeroSection />
+</div>
+<div id="benefits">
 	<BenefitSection />
+</div>
+<div id="features">
 	<FeatureSection />
+</div>
+<div id="pricing">
 	<PricingSection />
+</div>
+<div id="faq">
 	<FaqSection />
+</div>
+<div id="newsletter">
 	<NewsletterSection />
+</div>
+<div id="contact">
 	<Footer />
 </div>

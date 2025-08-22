@@ -4,10 +4,10 @@
 	let isMobileMenuOpen = $state(false);
 
 	const menuItems = [
-		{ text: 'Home', url: '/' },
-		{ text: 'Our services', url: '/' },
-		{ text: 'About', url: '/' },
-		{ text: 'Contact', url: '/' }
+		{ text: 'Home', url: '#home' },
+		{ text: 'Our services', url: '#features' },
+		{ text: 'About', url: '#benefits' },
+		{ text: 'Contact', url: '#contact' }
 	];
 
 	const handleMobileMenuToggle = (event: Event) => {
@@ -64,11 +64,12 @@
 			</div>
 			<div class="header-button space-x-2">
 				<div class="hidden lg:flex lg:items-center">
-					<button
+					<a
+						href="#pricing"
 						class="flex items-center text-black justify-center rounded-full border border-black px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
 					>
 						<span>Join now</span>
-					</button>
+					</a>
 				</div>
 			</div>
 			<div class="flex items-center justify-center lg:hidden">
@@ -142,7 +143,7 @@
 					<div class="header-button space-y-2">
 						<div class="px-6 lg:flex lg:items-center">
 							<a
-								href="/"
+								href="#pricing"
 								class="flex w-full items-center text-black justify-center rounded-full border border-black px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
 							>
 								<span>Join now</span>

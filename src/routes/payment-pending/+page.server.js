@@ -1,26 +1,22 @@
-import { error } from "@sveltejs/kit";
+import { redirect } from '@sveltejs/kit';
+import { store } from '$lib/server/store';
 
-/**
- * Server-side load function for the payment pending page.
- * It passes the transaction reference from the URL to the page.
- * @type {import('./$types').PageServerLoad}
- */
-export async function load({ url }) {
-  const referenceId = url.searchParams.get("ref");
+/** @type {import('./$types').PageServerLoad} */
+export const load = async ({ url }) => {
+	const ref = url.searchParams.get('ref');
 
-  if (!referenceId) {
-    throw error(
-      400,
-      "No payment reference provided. Please check the URL and try again.",
-    );
-  }
+	if (!ref) {
+		throw redirect(303, '/');
+	}
 
-  // Since the database is removed, we just pass the reference to the page.
-  // The page will use this reference to poll for the payment status.
-  return {
-    paymentDetails: {
-      status: "pending", // The initial status is always pending
-      provider_reference: referenceId,
-    },
-  };
-}
+	const payment = store.getPayment(ref);
+
+	if (payment?.status === 'completed') {
+		const redirectTo = store.getPayment(ref)?.metadata?.redirect || '/app/dashboard';
+		throw redirect(303, redirectTo);
+	}
+
+	return {
+		paymentDetails: payment
+	};
+};

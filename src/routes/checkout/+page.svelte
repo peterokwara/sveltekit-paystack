@@ -23,12 +23,8 @@
 <div class="bg-white">
 	<header class="flex items-center justify-between px-4 py-10 sm:px-6 sm:py-8 lg:px-8">
 		<a href="/">
-			<span class="sr-only">SvelteKit Paystack</span>
-			<img
-				src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-				alt="Company Logo"
-				class="h-8 w-auto"
-			/>
+			<span class="sr-only">Incln</span>
+			<h2 class="text-2xl font-bold text-black">Incln</h2>
 		</a>
 		<div class="hidden sm:flex sm:items-center sm:space-x-8">
 			<a href="/" class="text-sm font-medium text-gray-700">Contact support</a>
@@ -107,6 +103,7 @@
 				>
 					<input type="hidden" name="price" value={data.price} />
 					<input type="hidden" name="plan" value={data.plan} />
+					<input type="hidden" name="redirect" value={data.redirectUrl} />
 
 					<h2 class="text-lg font-medium text-gray-900">Contact information</h2>
 
@@ -122,13 +119,14 @@
 								autocomplete="email"
 								class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								required
+								value={data.userEmail || ''}
 							/>
 						</div>
 					</div>
 					<button
 						type="submit"
 						disabled={isLoading}
-						class="mt-6 w-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
+						class="mt-6 w-full rounded-md border border-transparent bg-[#2355A0] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
 					>
 						{#if isLoading}
 							Processing...

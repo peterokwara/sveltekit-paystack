@@ -8,7 +8,9 @@
 
 	let { data } = $props();
 
-	let currentStatus: PaymentStatus = $state(data.paymentDetails?.status as PaymentStatus || 'pending');
+	let currentStatus: PaymentStatus = $state(
+		(data.paymentDetails?.status as PaymentStatus) || 'pending'
+	);
 	let attempts = $state(0);
 	const MAX_ATTEMPTS = 15;
 	let pollingIntervalId: NodeJS.Timeout | null = null;
@@ -20,9 +22,9 @@
 		}
 
 		try {
-			const referenceId = data.paymentDetails?.provider_reference;
+			const referenceId = $page.url.searchParams.get('ref');
 			if (!referenceId) {
-				throw new Error('Payment reference ID not found in page data.');
+				throw new Error('Payment reference ID not found in URL.');
 			}
 
 			const response = await fetch(`/api/payments/paystack/status/${referenceId}`);
@@ -32,8 +34,8 @@
 
 			const result = await response.json();
 
-			if (result.data?.internal_status) {
-				currentStatus = result.data.internal_status;
+			if (result.status) {
+				currentStatus = result.status;
 			}
 		} catch (err) {
 			console.error('Polling error:', err);
@@ -85,12 +87,8 @@
 					<!-- Logo -->
 					<div class="ml-4 flex lg:ml-0">
 						<a href="/">
-							<span class="sr-only">Your Company</span>
-							<img
-								src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-								alt="Company logo"
-								class="h-8 w-auto"
-							/>
+							<span class="sr-only">Incln</span>
+							<h2 class="text-2xl font-bold text-black">Incln</h2>
 						</a>
 					</div>
 				</div>

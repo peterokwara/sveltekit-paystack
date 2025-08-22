@@ -16,7 +16,7 @@ export const GET = async ({ params }) => {
 		return json({ error: 'Reference ID is required' }, { status: 400 });
 	}
 
-	// 1. Check our internal store first
+	// 1. Check our internal store first. If already completed, we're done.
 	const payment = store.getPayment(referenceId);
 	if (payment?.status === 'completed') {
 		return json({
@@ -25,20 +25,22 @@ export const GET = async ({ params }) => {
 		});
 	}
 
-	// 2. If not completed, verify with Paystack
+	// 2. If not completed, actively verify with Paystack. This is the key for webhook independence.
 	const transactionDetails = await getPaystackTransactionDetails(referenceId);
 
 	if (!transactionDetails) {
-		return json({ status: 'failed', message: 'Could not verify transaction.' }, { status: 404 });
+		return json({ status: 'failed', message: 'Could not verify transaction with provider.' }, { status: 404 });
 	}
 
-	// 3. Map Paystack status to our internal status
+	// 3. Map Paystack status to our internal status ('completed', 'failed', 'pending').
 	const internalStatus = mapPaystackStatus(transactionDetails.status);
 
-	// 4. Update our in-memory store
-	store.updatePaymentStatus(referenceId, internalStatus);
+	// 4. Update our in-memory store with the authoritative status from Paystack.
+	if (payment) {
+		store.updatePaymentStatus(referenceId, internalStatus);
+	}
 
-	// 5. Return the current status
+	// 5. Return the current, verified status.
 	return json({
 		status: internalStatus,
 		message: `Transaction status: ${internalStatus}`

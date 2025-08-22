@@ -3,10 +3,11 @@ import { initializePaystackTransaction } from '$lib/server/services/payment/pays
 import { store } from '$lib/server/store';
 
 /** @type {import('./$types').PageServerLoad} */
-export const load = async ({ url }) => {
+export const load = async ({ url, locals }) => {
 	const plan = url.searchParams.get('plan');
 	const price = url.searchParams.get('price');
 	const yearly = url.searchParams.get('yearly');
+	const redirectUrl = url.searchParams.get('redirect') || '/app/dashboard';
 
 	if (!plan || !price) {
 		throw redirect(303, '/');
@@ -15,7 +16,9 @@ export const load = async ({ url }) => {
 	return {
 		plan,
 		price: Number(price),
-		yearly: yearly === 'true'
+		yearly: yearly === 'true',
+		redirectUrl,
+		userEmail: locals.user?.email
 	};
 };
 
@@ -26,6 +29,7 @@ export const actions = {
 		const email = formData.get('email')?.toString();
 		const price = formData.get('price')?.toString();
 		const plan = formData.get('plan')?.toString();
+		const redirectUrl = formData.get('redirect')?.toString() || '/app/dashboard';
 
 		if (!email || !price || !plan) {
 			return fail(400, { message: 'Email, price, and plan are required.' });
@@ -39,7 +43,10 @@ export const actions = {
 		store.createPayment(transactionReference, {
 			email,
 			amount: amountInKobo,
-			currency: 'KES'
+			currency: 'KES',
+			metadata: {
+				redirect: redirectUrl
+			}
 		});
 
 		try {
@@ -48,9 +55,10 @@ export const actions = {
 				amount: amountInKobo,
 				currency: 'KES',
 				reference: transactionReference,
-				callbackUrl: callbackUrl,
+				callback_url: callbackUrl,
 				metadata: {
-					plan_name: plan
+					plan_name: plan,
+					redirect: redirectUrl
 				}
 			});
 
