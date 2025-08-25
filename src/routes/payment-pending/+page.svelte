@@ -11,8 +11,11 @@
 	let currentStatus: PaymentStatus = $state(
 		(data.paymentDetails?.status as PaymentStatus) || 'pending'
 	);
+
 	let attempts = $state(0);
+
 	const MAX_ATTEMPTS = 15;
+	
 	let pollingIntervalId: NodeJS.Timeout | null = null;
 
 	async function checkPaymentStatus() {

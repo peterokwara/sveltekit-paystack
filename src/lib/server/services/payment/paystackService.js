@@ -15,7 +15,7 @@ const PAYSTACK_SECRET = env.SECRET_PAYSTACK_TEST_KEY;
  * @param {number} args.amount - Amount in the smallest currency unit (e.g., kobo, cents).
  * @param {string} args.currency - The currency of the transaction (e.g., 'NGN').
  * @param {string} args.reference - A unique reference for the transaction.
- * @param {string} args.callbackUrl - The URL to redirect to after payment.
+ * @param {string} args.callback_url - The URL to redirect to after payment.
  * @param {Record<string, unknown>} [args.metadata] - Optional metadata.
  * @returns {Promise<any>} The data returned by Paystack, including the authorization_url.
  */
@@ -30,14 +30,14 @@ export async function initializePaystackTransaction(args) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(args),
-    },
+    }
   );
 
   const data = await response.json();
 
   if (!response.ok || !data.status) {
     throw new Error(
-      data.message || "Failed to initialize transaction with Paystack",
+      data.message || "Failed to initialize transaction with Paystack"
     );
   }
   return data.data;
@@ -50,16 +50,18 @@ export async function initializePaystackTransaction(args) {
  */
 export async function getPaystackTransactionDetails(referenceId) {
   const response = await fetch(
-    `https://api.paystack.co/transaction/verify/${encodeURIComponent(referenceId)}`,
+    `https://api.paystack.co/transaction/verify/${encodeURIComponent(
+      referenceId
+    )}`,
     {
       headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` },
-    },
+    }
   );
   const data = await response.json();
   if (!response.ok || !data.status) {
     console.error(
       `Paystack verification failed for reference ${referenceId}:`,
-      data.message,
+      data.message
     );
     return null;
   }
